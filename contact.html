@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact | Chithra</title>
+<meta name="description" content="Send a message. Replies come directly by email or phone.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  form{max-width:560px;margin-top:24px}
+  label{display:block;font-weight:600;margin:18px 0 6px}
+  input,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:150px;resize:vertical}
+  input:focus-visible,textarea:focus-visible{outline:3px solid var(--teal);outline-offset:1px}
+  .opt{font-weight:400;color:var(--muted)}
+  .hp{position:absolute;left:-9999px;height:0;width:0;overflow:hidden}
+  .note{color:var(--muted);font-size:.9rem;margin-top:14px}
+  #status{margin-top:18px;font-weight:600}
+  button.btn{border:0;cursor:pointer;font:inherit;font-weight:600;margin-top:22px}
+  button.btn[disabled]{opacity:.6;cursor:default}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="todo">[Your Name]</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="assistants.html">AI assistants</a></li>
+    <li><a href="contact.html" aria-current="page">Contact</a></li>
+  </ul>
+</div></nav>
+
+<header class="hero" style="padding:64px 0 56px"><div class="wrap">
+  <h1 style="font-size:clamp(2.2rem,5vw,3.2rem)">Contact</h1>
+  <p>Leave a message about a role, a project or an AI assistant for your business. I reply directly by email or phone.</p>
+</div></header>
+
+<section>
+  <div class="wrap">
+    <form id="contact-form" autocomplete="on">
+      <label for="name">Your name</label>
+      <input id="name" name="name" required maxlength="80" autocomplete="name">
+
+      <label for="email">Your email</label>
+      <input id="email" name="email" type="email" required maxlength="120" autocomplete="email">
+
+      <label for="phone">Phone <span class="opt">(optional, if you'd prefer a call)</span></label>
+      <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel">
+
+      <label for="company">Company <span class="opt">(optional)</span></label>
+      <input id="company" name="company" maxlength="80" autocomplete="organization">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" required minlength="10" maxlength="2000"></textarea>
+
+      <div class="hp" aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button class="btn" id="send" type="submit">Send message</button>
+      <p id="status" role="status" aria-live="polite"></p>
+      <p class="note">Your message is emailed to me and used only to reply. This site doesn't store it. Please don't include passwords or financial details.</p>
+    </form>
+  </div>
+</section>
+
+<footer><div class="wrap">&copy; <span class="todo">[Your Name]</span>. DevOps and cloud automation.</div></footer>
+
+<script>
+(function () {
+  const API = "https://qjlzvnsvg4kzfcfief32snckuu0rzqmv.lambda-url.ap-southeast-2.on.aws/";
+  const form = document.getElementById("contact-form");
+  const btn = document.getElementById("send");
+  const status = document.getElementById("status");
+  const loaded = Date.now();
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (API.indexOf("PASTE") !== -1) { status.textContent = "The form isn't connected yet."; return; }
+    btn.disabled = true;
+    status.textContent = "Sending...";
+    const data = Object.fromEntries(new FormData(form));
+    data.elapsed = Date.now() - loaded;
+    try {
+      const res = await fetch(API, { method: "POST", body: JSON.stringify(data) });
+      const out = await res.json();
+      if (res.ok) {
+        form.reset();
+        status.textContent = "Thank you. Your message has been sent, and I'll reply soon.";
+      } else {
+        status.textContent = out.error || "Sorry, that didn't send. Please check the form and try again.";
+        btn.disabled = false;
+      }
+    } catch (err) {
+      status.textContent = "Sorry, something went wrong. Please try again.";
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

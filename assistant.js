@@ -1,7 +1,7 @@
 (function () {
   // ---- Settings: edit these three ----
-  const API_URL = "https://s2zbyqgfjphajwupbxs4w67v4q0rqtxw.lambda-url.ap-southeast-2.on.aws/";
-  const CONTACT_URL = "";   // set to "contact.html" once your contact page exists
+  const API_URL = "https://qs4ycwhajoj62t6lwf2q6iz7ha0bygbv.lambda-url.us-east-1.on.aws/";
+  const CONTACT_URL = "contact.html";   // set to "contact.html" once your contact page exists
   const GREETING = "Hi! I'm an AI assistant. Ask me about experience, skills or certifications. Please don't share personal or financial details here.";
   // ------------------------------------
 
